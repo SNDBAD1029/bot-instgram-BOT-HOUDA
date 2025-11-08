@@ -13,8 +13,12 @@
       <div id="statusBadge">جارٍ التحميل...</div>
     </header>
 
+    <div id="alertBanner" class="alert-banner" style="display: none;">
+      ⚠️ لا توجد جلسة محفوظة! الرجاء رفع ملف appstate.json أو لصق سلسلة الكوكيز أدناه لتشغيل البوت.
+    </div>
+
     <section class="controls">
-      <div class="row">
+      <div class="row upload-row">
         <label>رفع ملف الجلسة (appstate.json):</label>
         <form id="uploadForm">
           <input type="file" id="appstateFile" name="appstate" accept=".json" />

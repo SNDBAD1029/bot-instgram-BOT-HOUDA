@@ -204,7 +204,8 @@ export async function start(io, configPath, appstatePath) {
   await ensureIg();
   const loaded = await loadSessionFromAppstate(appstatePathGlobal);
   if (!loaded) {
-    log('No usable session found in appstate.json. Please use dashboard to import cookies or provide a serialized session.');
+    log('⚠️ لا توجد جلسة محفوظة. الرجاء رفع ملف appstate.json من لوحة التحكم قبل تشغيل البوت.');
+    log('⚠️ No session found. Please upload appstate.json file from the dashboard before starting the bot.');
     ig.state.cookieJar = new CookieJar();
   } else {
     await checkLogin();
@@ -251,9 +252,9 @@ export async function loadCookiesFromAppstate(appstatePath) {
   const loaded2 = await loadSessionFromAppstate(appstatePath);
   if (loaded2) {
     const valid = await checkLogin();
-    if (valid) log('Session loaded and verified after appstate upload or cookie import.');
-    else log('Session loaded but login verification failed. Cookies may be incomplete or expired.');
+    if (valid) log('✅ تم تحميل الجلسة والتحقق منها بنجاح.');
+    else log('⚠️ تم تحميل الجلسة لكن فشل التحقق. قد تكون الكوكيز غير كاملة أو منتهية الصلاحية.');
   } else {
-    log('No cookies/session found in appstate.json.');
+    log('⚠️ لا توجد جلسة في appstate.json. الرجاء رفع ملف جلسة صالح.');
   }
 }

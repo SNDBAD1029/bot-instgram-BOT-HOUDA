@@ -17,6 +17,7 @@
   const ttsToggle = document.getElementById('ttsToggle');
 
   let ttsEnabled = false;
+  let lastSessionState = null;
 
   function appendLog(text) {
     const now = new Date().toLocaleTimeString();
@@ -34,6 +35,30 @@
         statsEl.textContent = `رسائل واردة: ${data.config.stats.messagesReceived || 0} — رسائل مُرسلة: ${data.config.stats.messagesSent || 0}`;
         botStatus.textContent = data.botRunning ? 'البوت يعمل' : 'البوت متوقف';
         statusBadge.textContent = data.botRunning ? 'أونلاين' : 'متوقف';
+        
+        // Show/hide warning banner based on session status
+        const alertBanner = document.getElementById('alertBanner');
+        const uploadRow = document.querySelector('.upload-row');
+        const sessionChanged = lastSessionState !== data.appstateExists;
+        
+        if (!data.appstateExists) {
+          alertBanner.style.display = 'block';
+          if (uploadRow) uploadRow.classList.add('highlight-card');
+          startBtn.disabled = true;
+          startBtn.title = 'يجب رفع ملف الجلسة أولاً';
+          if (sessionChanged) {
+            appendLog('⚠️ تنبيه: لا توجد جلسة محفوظة. الرجاء رفع ملف appstate.json أو لصق الكوكيز.');
+          }
+        } else {
+          alertBanner.style.display = 'none';
+          if (uploadRow) uploadRow.classList.remove('highlight-card');
+          startBtn.disabled = false;
+          startBtn.title = '';
+          if (sessionChanged && lastSessionState === false) {
+            appendLog('✅ تم رفع الجلسة بنجاح! يمكنك الآن تشغيل البوت.');
+          }
+        }
+        lastSessionState = data.appstateExists;
       }
     } catch (e) {
       appendLog('فشل جلب الحالة: ' + e.message);
