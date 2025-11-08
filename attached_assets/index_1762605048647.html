@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Random Joke Generator</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; max-width: 800px; margin: 40px auto; padding: 16px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    button { padding: 10px 16px; font-size: 16px; cursor: pointer; }
+    #joke { margin-top: 18px; font-size: 1.15rem; }
+    #meta { color: #666; margin-top: 8px; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <h1>Random Joke Generator</h1>
+  <div class="card">
+    <div>
+      <label>
+        Source:
+        <select id="sourceSelect">
+          <option value="icanhaz">icanhazdadjoke (short dad jokes)</option>
+          <option value="official">Official Joke API (setup/punchline)</option>
+        </select>
+      </label>
+      <button id="newJokeBtn">Get a new joke</button>
+      <button id="copyBtn">Copy</button>
+    </div>
+
+    <div id="joke" aria-live="polite">Press "Get a new joke" to start.</div>
+    <div id="meta"></div>
+  </div>
+
+  <script src="client.js"></script>
+</body>
+</html>
