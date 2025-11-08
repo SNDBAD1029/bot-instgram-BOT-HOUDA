@@ -1,0 +1,41 @@
+name: Run Node.js Bot
+
+on:
+  # حدد متى يتم تشغيل هذا السير العمل
+  push:
+    branches:
+      - main  # يمكنك تغيير هذا إلى اسم الفرع الرئيسي لديك (مثل master)
+  # يمكنك إزالة الجزء أعلاه واستخدام:
+  # workflow_dispatch:  # للسماح بالتشغيل اليدوي من واجهة GitHub
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest  # النظام الذي سيتم تشغيل البوت عليه
+
+    steps:
+      # 1. سحب الكود من المستودع
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. إعداد بيئة Node.js
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'  # يمكنك تغيير هذا إلى إصدار Node.js الذي تستخدمه
+
+      # 3. تثبيت تبعيات المشروع (إذا كنت تستخدم package.json)
+      - name: Install dependencies
+        run: npm install
+
+      # 4. تشغيل البوت
+      - name: Run the Bot
+        # استبدل 'index.js' بالملف الرئيسي الذي يبدأ البوت الخاص بك
+        run: node index.js
+        # أو إذا كنت تستخدم npm script (مثل 'start' في package.json):
+        # run: npm start
+
+      # ملاحظة هامة: GitHub Actions مخصص للعمليات التي تنتهي.
+      # إذا كان البوت الخاص بك يجب أن يعمل بشكل مستمر (دائمًا)،
+      # فإن GitHub Actions ليس الحل الأمثل للتشغيل المستمر والدائم
+      # لأنه مصمم للعمليات التي يتم إكمالها (Build, Test, Deploy).
+      # قد تحتاج إلى منصة استضافة أخرى للتشغيل المستمر.
