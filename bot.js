@@ -1,6 +1,6 @@
-const fs = require('fs-extra');
-const { IgApiClient } = require('instagram-private-api');
-const { CookieJar } = require('tough-cookie');
+import fs from 'fs-extra';
+import { IgApiClient } from 'instagram-private-api';
+import { CookieJar } from 'tough-cookie';
 
 let ig = null;
 let pollInterval = null;
@@ -197,7 +197,7 @@ async function pollingLoop() {
   }
 }
 
-async function start(io, configPath, appstatePath) {
+export async function start(io, configPath, appstatePath) {
   ioRef = io;
   configPathGlobal = configPath;
   appstatePathGlobal = appstatePath;
@@ -230,25 +230,9 @@ async function start(io, configPath, appstatePath) {
 
   // run once immediately
   await pollingLoop();
-
-  // Expose helper functions
-  module.exports.updateConfig = async function (cfg) {
-    if (ioRef) ioRef.emit('config', cfg);
-  };
-
-  module.exports.loadCookiesFromAppstate = async function (appstatePath) {
-    const loaded2 = await loadSessionFromAppstate(appstatePath);
-    if (loaded2) {
-      const valid = await checkLogin();
-      if (valid) log('Session loaded and verified after appstate upload or cookie import.');
-      else log('Session loaded but login verification failed. Cookies may be incomplete or expired.');
-    } else {
-      log('No cookies/session found in appstate.json.');
-    }
-  };
 }
 
-async function stop() {
+export async function stop() {
   if (pollInterval) clearInterval(pollInterval);
   if (keepAliveInterval) clearInterval(keepAliveInterval);
   pollInterval = null;
@@ -259,9 +243,17 @@ async function stop() {
   lastMessageIds.clear();
 }
 
-module.exports = {
-  start,
-  stop,
-  updateConfig: async () => {},
-  loadCookiesFromAppstate: async () => {}
-};
+export async function updateConfig(cfg) {
+  if (ioRef) ioRef.emit('config', cfg);
+}
+
+export async function loadCookiesFromAppstate(appstatePath) {
+  const loaded2 = await loadSessionFromAppstate(appstatePath);
+  if (loaded2) {
+    const valid = await checkLogin();
+    if (valid) log('Session loaded and verified after appstate upload or cookie import.');
+    else log('Session loaded but login verification failed. Cookies may be incomplete or expired.');
+  } else {
+    log('No cookies/session found in appstate.json.');
+  }
+}

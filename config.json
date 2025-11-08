@@ -5,5 +5,5 @@
     "messagesReceived": 0,
     "messagesSent": 0
   },
-  "botRunning": false
+  "botRunning": true
 }

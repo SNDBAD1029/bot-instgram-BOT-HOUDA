@@ -1,22 +1,27 @@
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
-const bodyParser = require('body-parser');
-const fs = require('fs-extra');
-const path = require('path');
-const multer = require('multer');
+import express from 'express';
+import { createServer } from 'http';
+import { Server } from 'socket.io';
+import bodyParser from 'body-parser';
+import fs from 'fs-extra';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import multer from 'multer';
+import cors from 'cors';
 
-const BOT = require('./bot');
+import * as BOT from './bot.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const APPSTATE_PATH = path.resolve(__dirname, 'appstate.json');
 const CONFIG_PATH = path.resolve(__dirname, 'config.json');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server, { cors: { origin: '*' } });
+const server = createServer(app);
+const io = new Server(server, { cors: { origin: '*' } });
 
 app.use(bodyParser.json());
-app.use(require('cors')());
+app.use(cors());
 
 // Serve public assets (client JS, images, etc.)
 app.use('/public', express.static(path.join(__dirname, 'public')));
