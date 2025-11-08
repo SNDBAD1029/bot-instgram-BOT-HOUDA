@@ -15,6 +15,9 @@
   const appstateFile = document.getElementById('appstateFile');
   const threadCountEl = document.getElementById('threadCount');
   const ttsToggle = document.getElementById('ttsToggle');
+  const usernameInput = document.getElementById('usernameInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const loginBtn = document.getElementById('loginBtn');
 
   let ttsEnabled = false;
   let lastSessionState = null;
@@ -193,6 +196,44 @@
   ttsToggle.addEventListener('change', () => {
     ttsEnabled = !!ttsToggle.checked;
     appendLog('قراءة الرسائل (TTS) ' + (ttsEnabled ? 'مفعلة' : 'معطلة'));
+  });
+
+  loginBtn.addEventListener('click', async () => {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value.trim();
+    
+    if (!username || !password) {
+      alert('الرجاء إدخال البريد الإلكتروني/اسم المستخدم وكلمة المرور');
+      return;
+    }
+    
+    loginBtn.disabled = true;
+    loginBtn.textContent = 'جاري تسجيل الدخول...';
+    appendLog('محاولة تسجيل الدخول...');
+    
+    try {
+      const res = await fetch('/api/login-credentials', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const json = await res.json();
+      
+      if (json.ok) {
+        appendLog('✅ تم تسجيل الدخول بنجاح!');
+        passwordInput.value = '';
+        await loadStatus();
+      } else {
+        appendLog('❌ فشل تسجيل الدخول: ' + (json.error || 'خطأ غير معروف'));
+        alert('فشل تسجيل الدخول: ' + (json.error || 'تحقق من البريد وكلمة المرور'));
+      }
+    } catch (e) {
+      appendLog('❌ خطأ في تسجيل الدخول: ' + e.message);
+      alert('خطأ في الاتصال: ' + e.message);
+    } finally {
+      loginBtn.disabled = false;
+      loginBtn.textContent = 'تسجيل الدخول';
+    }
   });
 
   // initial load

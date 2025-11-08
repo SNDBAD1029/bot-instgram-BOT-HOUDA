@@ -83,6 +83,28 @@ app.post('/api/import-cookies', async (req, res) => {
   res.json({ ok: true });
 });
 
+// Login with username/password (NEVER stores password to disk)
+app.post('/api/login-credentials', async (req, res) => {
+  const { username, password } = req.body;
+  if (!username || !password) return res.status(400).json({ error: 'Username and password required' });
+  
+  try {
+    // Attempt login directly WITHOUT storing credentials to config
+    if (typeof BOT.loginWithCredentials === 'function') {
+      const success = await BOT.loginWithCredentials(username, password, APPSTATE_PATH, CONFIG_PATH);
+      if (success) {
+        res.json({ ok: true, message: 'Login successful' });
+      } else {
+        res.status(401).json({ error: 'Login failed. Check username/password.' });
+      }
+    } else {
+      res.status(500).json({ error: 'Login function not available' });
+    }
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // Upload appstate.json file via multipart/form-data (field name: appstate)
 const upload = multer({ storage: multer.memoryStorage(), limits: { fileSize: 2 * 1024 * 1024 } });
 app.post('/api/upload-appstate', upload.single('appstate'), async (req, res) => {

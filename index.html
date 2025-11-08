@@ -18,8 +18,23 @@
     </div>
 
     <section class="controls">
+      <div class="row">
+        <label>طريقة تسجيل الدخول:</label>
+        <div style="margin: 10px 0;">
+          <strong>الطريقة 1: تسجيل الدخول بالبريد/اسم المستخدم وكلمة المرور</strong>
+        </div>
+        <input type="text" id="usernameInput" placeholder="البريد الإلكتروني أو اسم المستخدم" style="margin-bottom: 10px; width: 100%; padding: 8px;" />
+        <input type="password" id="passwordInput" placeholder="كلمة المرور" style="margin-bottom: 10px; width: 100%; padding: 8px;" />
+        <button id="loginBtn" class="btn">تسجيل الدخول</button>
+        <div class="small" style="margin-top: 5px; color: #888;">
+          💡 بعد التسجيل الناجح، سيتم حفظ الجلسة تلقائياً ومسح كلمة المرور للأمان
+        </div>
+      </div>
+
       <div class="row upload-row">
-        <label>رفع ملف الجلسة (appstate.json):</label>
+        <div style="margin: 10px 0;">
+          <strong>الطريقة 2: رفع ملف الجلسة (appstate.json)</strong>
+        </div>
         <form id="uploadForm">
           <input type="file" id="appstateFile" name="appstate" accept=".json" />
           <button type="submit" class="btn">رفع</button>
@@ -27,7 +42,9 @@
       </div>
 
       <div class="row">
-        <label>أو لصق سلسلة الكوكيز:</label>
+        <div style="margin: 10px 0;">
+          <strong>الطريقة 3: لصق سلسلة الكوكيز</strong>
+        </div>
         <textarea id="cookieString" placeholder="ig_did=...; csrftoken=...; sessionid=..."></textarea>
         <button id="importCookiesBtn" class="btn">استيراد الكوكيز</button>
       </div>

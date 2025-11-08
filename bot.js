@@ -57,6 +57,21 @@ async function setCookieJarFromString(cookieString) {
   ig.state.cookieJar = jar;
 }
 
+async function loginWithUsernamePassword(username, password) {
+  try {
+    await ensureIg();
+    ig.state.generateDevice(username);
+    log(`Attempting login with username: ${username}`);
+    await ig.account.login(username, password);
+    log(`✅ Successfully logged in as ${username}`);
+    await saveAppStateSerialized();
+    return true;
+  } catch (e) {
+    log('❌ Login with username/password failed: ' + (e.message || e));
+    return false;
+  }
+}
+
 async function loadSessionFromAppstate(appstatePath) {
   try {
     if (!fs.existsSync(appstatePath)) return false;
@@ -197,37 +212,49 @@ async function pollingLoop() {
   }
 }
 
+async function tryMultiMethodLogin(configPath, appstatePath) {
+  // Try loading from appstate.json first
+  const loaded = await loadSessionFromAppstate(appstatePath);
+  if (loaded) {
+    const verified = await checkLogin();
+    if (verified) {
+      log('✅ Logged in successfully using saved session');
+      return true;
+    }
+  }
+
+  log('⚠️ No valid session found. Please login using the dashboard.');
+  return false;
+}
+
 export async function start(io, configPath, appstatePath) {
   ioRef = io;
   configPathGlobal = configPath;
   appstatePathGlobal = appstatePath;
   await ensureIg();
-  const loaded = await loadSessionFromAppstate(appstatePathGlobal);
-  if (!loaded) {
-    log('⚠️ لا توجد جلسة محفوظة. الرجاء رفع ملف appstate.json من لوحة التحكم قبل تشغيل البوت.');
-    log('⚠️ No session found. Please upload appstate.json file from the dashboard before starting the bot.');
+  
+  const loggedIn = await tryMultiMethodLogin(configPath, appstatePath);
+  if (!loggedIn) {
     ig.state.cookieJar = new CookieJar();
-  } else {
-    await checkLogin();
   }
 
   // clear previous intervals
   if (pollInterval) clearInterval(pollInterval);
   if (keepAliveInterval) clearInterval(keepAliveInterval);
 
-  // Start polling with small jitter between runs to appear less bot-like
-  const baseIntervalMs = 10000; // 10s
+  // Start polling with safe interval (40s base, ensures we never go below 30s)
+  const baseIntervalMs = 40000; // 40s
   pollInterval = setInterval(async () => {
-    // jitter +/- 3s
-    const jitter = randomBetween(-3000, 3000);
-    await sleep(Math.max(0, jitter));
+    // Add only positive jitter (0-15s) to stay above 40s minimum
+    const jitter = randomBetween(0, 15000);
+    await sleep(jitter);
     await pollingLoop();
   }, baseIntervalMs);
 
-  // Keep-alive: fetch timeline every 60-120 seconds randomly
+  // Keep-alive: fetch timeline every 5-8 minutes randomly (less frequent)
   keepAliveInterval = setInterval(async () => {
     await keepAliveJob();
-  }, randomBetween(60 * 1000, 120 * 1000));
+  }, randomBetween(5 * 60 * 1000, 8 * 60 * 1000));
 
   // run once immediately
   await pollingLoop();
@@ -257,4 +284,12 @@ export async function loadCookiesFromAppstate(appstatePath) {
   } else {
     log('⚠️ لا توجد جلسة في appstate.json. الرجاء رفع ملف جلسة صالح.');
   }
+}
+
+export async function loginWithCredentials(username, password, appstatePath, configPath) {
+  await ensureIg();
+  const success = await loginWithUsernamePassword(username, password);
+  // Password is NEVER stored to disk - it only exists in memory during this call
+  // If login succeeds, session is saved to appstate.json automatically
+  return success;
 }
