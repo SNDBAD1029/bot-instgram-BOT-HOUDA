@@ -1,0 +1,44 @@
+:root{
+  --bg:#0b0f13;
+  --panel:#071022;
+  --accent:#0b56a6;
+  --accent-2:#063b7a;
+  --text:#e6eef8;
+  --muted:#9fb6d8;
+  --danger:#ff6b6b;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#020409);color:var(--text);font-family:system-ui,Arial,Helvetica Neue;padding:18px}
+.container{max-width:980px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px}
+h1{margin:0;font-size:20px;color:var(--text)}
+#statusBadge{background:var(--panel);padding:8px 12px;border-radius:8px;color:var(--muted);font-size:13px}
+
+.controls{margin-top:18px;background:linear-gradient(180deg,var(--panel),#041226);padding:16px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+.controls .row{margin-bottom:14px;display:flex;flex-direction:column;gap:8px}
+.controls label{font-size:14px;color:var(--muted)}
+textarea{background:#020617;border:1px solid #05203a;color:var(--text);padding:10px;border-radius:8px;min-height:64px;resize:vertical}
+input[type="file"]{color:var(--muted)}
+.inline{display:flex;align-items:center;gap:12px}
+.actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+
+/* Buttons */
+.btn{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--text);padding:8px 12px;border-radius:8px;cursor:pointer;transition:all .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(11,86,166,0.12);border-color:var(--accent)}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));border:none;color:#fff}
+.btn.primary:hover{filter:brightness(1.05);transform:translateY(-2px)}
+
+/* Switch */
+.switch{position:relative;display:inline-block;width:48px;height:26px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#29384a;border-radius:999px;transition:.2s}
+.slider:before{position:absolute;content:"";height:20px;width:20px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked + .slider{background:var(--accent)}
+.switch input:checked + .slider:before{transform:translateX(22px)}
+
+/* Stats and console */
+.stats{margin-top:16px;padding:12px;border-radius:10px;background:linear-gradient(180deg,#031423,#02131a)}
+.console{margin-top:16px}
+.console pre{background:#000814;color:#6fe0ff;padding:12px;border-radius:8px;height:240px;overflow:auto;border:1px solid rgba(11,86,166,0.06)}
+.small{color:var(--muted);font-size:13px}

@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "welcomeMessage": "مرحبا انا اسمي 22HM\n\nلقد تم تطويري من قبل حودا\n\nشكرا لـ رسالتك سيقوم حودا بالرد عليك في اقرب وقت ممكن",
+  "stats": {
+    "messagesReceived": 0,
+    "messagesSent": 0
+  },
+  "botRunning": false
+}

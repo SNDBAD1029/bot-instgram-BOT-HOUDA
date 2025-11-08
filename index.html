@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <title>لوحة تحكم بوت إنستجرام</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="/public/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>لوحة تحكم بوت إنستجرام</h1>
+      <div id="statusBadge">جارٍ التحميل...</div>
+    </header>
+
+    <section class="controls">
+      <div class="row">
+        <label>رفع ملف الجلسة (appstate.json):</label>
+        <form id="uploadForm">
+          <input type="file" id="appstateFile" name="appstate" accept=".json" />
+          <button type="submit" class="btn">رفع</button>
+        </form>
+      </div>
+
+      <div class="row">
+        <label>أو لصق سلسلة الكوكيز:</label>
+        <textarea id="cookieString" placeholder="ig_did=...; csrftoken=...; sessionid=..."></textarea>
+        <button id="importCookiesBtn" class="btn">استيراد الكوكيز</button>
+      </div>
+
+      <div class="row">
+        <label>رسالة الترحيب:</label>
+        <textarea id="welcomeMsg"></textarea>
+        <div class="actions">
+          <label class="switch"><input type="checkbox" id="enabledToggle"><span class="slider"></span></label>
+          <span class="small">تفعيل الرد الآلي</span>
+          <button id="saveMsg" class="btn">حفظ الرسالة</button>
+        </div>
+      </div>
+
+      <div class="row inline">
+        <button id="startBtn" class="btn primary">تشغيل البوت</button>
+        <button id="stopBtn" class="btn">إيقاف البوت</button>
+        <div id="botStatus" class="small"></div>
+      </div>
+
+      <div class="row inline">
+        <label><input type="checkbox" id="ttsToggle"> تفعيل قراءة الرسائل (TTS)</label>
+        <div class="small">تستعمل خاصية المتصفح في قراءة النصوص</div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <h2>إحصائيات</h2>
+      <div id="stats">تحميل...</div>
+      <div id="threadCount" class="small">المحادثات: 0</div>
+    </section>
+
+    <section class="console">
+      <h2>سجل البوت</h2>
+      <pre id="console"></pre>
+    </section>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/public/client.js"></script>
+</body>
+</html>
